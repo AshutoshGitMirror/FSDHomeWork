@@ -1,0 +1,23 @@
+{
+  "name": "sunscreen-advisor",
+  "version": "1.0.0",
+  "description": "A website that tells you if you need sunscreen today, powered by OpenUV API",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": ["express", "openuv", "uv-index", "sunscreen"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.0",
+    "dotenv": "^16.4.0",
+    "ejs": "^3.1.10",
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

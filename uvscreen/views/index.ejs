@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sunscreen Advisor — Do You Need Sunscreen Today?</title>
+  <meta name="description" content="Check real-time UV index for your location and find out if you need sunscreen today. Powered by OpenUV API." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <main class="container">
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+      <div class="hero-icon">
+        <svg viewBox="0 0 120 120" class="sun-svg">
+          <circle cx="60" cy="60" r="24" fill="url(#sunGrad)" class="sun-core" />
+          <g class="sun-rays">
+            <line x1="60" y1="8"  x2="60" y2="28" />
+            <line x1="60" y1="92" x2="60" y2="112" />
+            <line x1="8"  y1="60" x2="28" y2="60" />
+            <line x1="92" y1="60" x2="112" y2="60" />
+            <line x1="23" y1="23" x2="37" y2="37" />
+            <line x1="83" y1="83" x2="97" y2="97" />
+            <line x1="97" y1="23" x2="83" y2="37" />
+            <line x1="37" y1="83" x2="23" y2="97" />
+          </g>
+          <defs>
+            <radialGradient id="sunGrad">
+              <stop offset="0%" stop-color="#fde68a" />
+              <stop offset="100%" stop-color="#f59e0b" />
+            </radialGradient>
+          </defs>
+        </svg>
+      </div>
+      <h1>Do You Need <span class="text-gradient">Sunscreen</span> Today?</h1>
+      <p class="subtitle">Enter your coordinates to get real-time UV index data and personalised sun protection advice.</p>
+    </section>
+
+    <!-- Location Form -->
+    <section class="card glass-card" id="location-form">
+      <h2>📍 Your Location</h2>
+      <form action="/check" method="POST" id="uv-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="lat">Latitude</label>
+            <input type="number" id="lat" name="lat" step="any" min="-90" max="90" value="19.076" placeholder="e.g. 19.076" required />
+          </div>
+          <div class="form-group">
+            <label for="lng">Longitude</label>
+            <input type="number" id="lng" name="lng" step="any" min="-180" max="180" value="72.8777" placeholder="e.g. 72.8777" required />
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="btn-check">
+            <span class="btn-icon">☀️</span> Check UV Index
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Info Cards -->
+    <section class="info-grid">
+      <div class="card glass-card info-card">
+        <div class="info-icon">🛡️</div>
+        <h3>Protection Advice</h3>
+        <p>Get personalised recommendations on SPF level, protective clothing, and safe sun exposure windows.</p>
+      </div>
+      <div class="card glass-card info-card">
+        <div class="info-icon">📊</div>
+        <h3>Hourly Forecast</h3>
+        <p>View the UV index throughout the day so you can plan outdoor activities during safer hours.</p>
+      </div>
+      <div class="card glass-card info-card">
+        <div class="info-icon">🌍</div>
+        <h3>Any Location</h3>
+        <p>Check UV data for anywhere on Earth — enter coordinates manually or use your device's GPS.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Powered by <a href="https://www.openuv.io/" target="_blank" rel="noopener">OpenUV API</a> · Built with Express.js &amp; Axios</p>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

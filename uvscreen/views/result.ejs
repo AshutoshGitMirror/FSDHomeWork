@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UV Results — Sunscreen Advisor</title>
+  <meta name="description" content="Your personalised UV index results and sunscreen recommendation." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <main class="container">
+
+    <!-- Verdict Banner -->
+    <section class="verdict-banner" style="--verdict-color: <%= verdict.color %>;" id="verdict">
+      <div class="verdict-emoji"><%= verdict.emoji %></div>
+      <h1 class="verdict-text">
+        <% if (verdict.needsSunscreen) { %>
+          Yes, You Need Sunscreen Today!
+        <% } else { %>
+          No Sunscreen Needed Today
+        <% } %>
+      </h1>
+      <p class="verdict-sub">Peak UV: <strong><%= maxUV %> (<%= verdict.level %>)</strong> at <%= maxUVTime %> · Current UV: <%= currentUV %> (<%= classification.level %>)</p>
+    </section>
+
+
+    <!-- UV Gauge + Stats Row -->
+    <div class="stats-row">
+      <!-- UV Gauge Card -->
+      <div class="card glass-card gauge-card" id="gauge-card">
+        <h2>Current UV Index</h2>
+        <div class="gauge-container">
+          <div class="gauge" style="--uv-value: <%= Math.min(currentUV / 14, 1) %>; --uv-color: <%= classification.color %>;">
+            <div class="gauge-fill"></div>
+            <div class="gauge-center">
+              <span class="gauge-number"><%= currentUV %></span>
+              <span class="gauge-label"><%= classification.level %></span>
+            </div>
+          </div>
+        </div>
+        <p class="gauge-advice"><%= classification.advice %></p>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="card glass-card stats-card" id="stats-card">
+        <h2>Today's Summary</h2>
+        <div class="stat-items">
+          <div class="stat-item">
+            <span class="stat-label">Max UV</span>
+            <span class="stat-value" style="color: <%= maxClassification.color %>;"><%= maxUV %></span>
+            <span class="stat-detail">at <%= maxUVTime %></span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">UV Level</span>
+            <span class="stat-value" style="color: <%= maxClassification.color %>;"><%= maxClassification.level %></span>
+            <span class="stat-detail">peak classification</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Ozone</span>
+            <span class="stat-value"><%= ozone %></span>
+            <span class="stat-detail">Dobson Units</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Location</span>
+            <span class="stat-value coord-value"><%= lat.toFixed(3) %>°, <%= lng.toFixed(3) %>°</span>
+            <span class="stat-detail">lat, lng</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Protection Window -->
+    <section class="card glass-card" id="protection-window">
+      <h2>🛡️ Protection Window</h2>
+      <p class="protection-desc">Time period during which the UV index exceeds 3 and sun protection is recommended:</p>
+      <div class="protection-times">
+        <div class="time-block">
+          <span class="time-label">From</span>
+          <span class="time-value"><%= protection.from %></span>
+        </div>
+        <div class="time-arrow">→</div>
+        <div class="time-block">
+          <span class="time-label">Until</span>
+          <span class="time-value"><%= protection.to %></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Hourly Forecast Chart -->
+    <section class="card glass-card" id="forecast-chart">
+      <h2>📊 Hourly UV Forecast</h2>
+      <div class="chart-container">
+        <div class="chart">
+          <% forecast.forEach(function(entry) { %>
+            <div class="chart-bar-wrapper">
+              <div class="chart-bar"
+                   style="height: <%= Math.max(entry.uv / 14 * 180, 4) %>px;
+                          background: <%= entry.classification.color %>;"
+                   title="UV: <%= entry.uv.toFixed(1) %>">
+                <span class="bar-value"><%= entry.uv.toFixed(1) %></span>
+              </div>
+              <span class="bar-label"><%= entry.hour.toString().padStart(2, '0') %></span>
+            </div>
+          <% }); %>
+        </div>
+        <div class="chart-legend">
+          <span class="legend-item"><span class="legend-dot" style="background:#4ade80;"></span> Low (0–2)</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#facc15;"></span> Moderate (3–5)</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#fb923c;"></span> High (6–7)</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#ef4444;"></span> Very High (8–10)</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#a855f7;"></span> Extreme (11+)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Safety Tips -->
+    <section class="card glass-card" id="safety-tips">
+      <h2>☀️ Sun Safety Tips</h2>
+      <div class="tips-grid">
+        <div class="tip">
+          <div class="tip-icon">🧴</div>
+          <h3>Sunscreen</h3>
+          <p>Apply SPF 30+ sunscreen 15 min before going outdoors. Reapply every 2 hours.</p>
+        </div>
+        <div class="tip">
+          <div class="tip-icon">🕶️</div>
+          <h3>Sunglasses</h3>
+          <p>Wear UV-blocking sunglasses to protect your eyes from harmful UV radiation.</p>
+        </div>
+        <div class="tip">
+          <div class="tip-icon">👒</div>
+          <h3>Hat & Clothing</h3>
+          <p>A wide-brimmed hat and long sleeves provide excellent physical sun protection.</p>
+        </div>
+        <div class="tip">
+          <div class="tip-icon">🏠</div>
+          <h3>Seek Shade</h3>
+          <p>Stay in the shade during peak UV hours, typically between 10 AM and 4 PM.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Back Button -->
+    <div class="back-actions">
+      <a href="/" class="btn btn-primary" id="btn-back">
+        <span class="btn-icon">↩</span> Check Another Location
+      </a>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <p>Powered by <a href="https://www.openuv.io/" target="_blank" rel="noopener">OpenUV API</a> · Built with Express.js &amp; Axios</p>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>
