@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Feedback System</title>
+    <meta
+      name="description"
+      content="Collect and manage student feedback for courses."
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <p class="eyebrow">Course Feedback</p>
+        <h1>Student Feedback System</h1>
+        <p class="hero-copy">
+          Submit course feedback, review all responses, and remove entries when
+          needed.
+        </p>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <p class="section-kicker">Frontend</p>
+            <h2>Submit Feedback</h2>
+          </div>
+          <p class="helper">All submissions are stored in MongoDB.</p>
+        </div>
+
+        <form id="feedback-form" class="feedback-form">
+          <label>
+            Student Name
+            <input
+              type="text"
+              name="studentName"
+              placeholder="Aarav Patil"
+              required
+            />
+          </label>
+
+          <label>
+            Course Name
+            <input
+              type="text"
+              name="courseName"
+              placeholder="Full Stack Development"
+              required
+            />
+          </label>
+
+          <label>
+            Rating (1-5)
+            <input
+              type="number"
+              name="rating"
+              min="1"
+              max="5"
+              step="1"
+              placeholder="5"
+              required
+            />
+          </label>
+
+          <label class="full-width">
+            Comments
+            <textarea
+              name="comments"
+              rows="4"
+              placeholder="The lab assignments were clear and practical."
+              required
+            ></textarea>
+          </label>
+
+          <button class="primary-button" type="submit">Submit Feedback</button>
+        </form>
+
+        <p id="status-message" class="status-message"></p>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <p class="section-kicker">Backend APIs</p>
+            <h2>Feedback List</h2>
+          </div>
+          <button id="refresh-button" class="ghost-button" type="button">
+            Refresh
+          </button>
+        </div>
+
+        <div id="feedback-list" class="feedback-list"></div>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

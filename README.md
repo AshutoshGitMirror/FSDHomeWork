@@ -24,3 +24,12 @@ Backend environment variables:
 
 - `PORT`
 - `MONGO_URI`
+
+### `student-feedback-system`
+
+Express + MongoDB backend with a static frontend for collecting and managing course feedback.
+
+Environment variables:
+
+- `PORT`
+- `MONGO_URI`
