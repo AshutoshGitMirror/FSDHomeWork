@@ -30,6 +30,9 @@
         <% } %>
       </h1>
       <p class="verdict-sub">Peak UV: <strong><%= maxUV %> (<%= verdict.level %>)</strong> at <%= maxUVTime %> · Current UV: <%= currentUV %> (<%= classification.level %>)</p>
+      <% if (historySaved) { %>
+        <p class="history-note">This lookup has been saved to MongoDB history.</p>
+      <% } %>
     </section>
 
 

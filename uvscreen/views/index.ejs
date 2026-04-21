@@ -67,6 +67,39 @@
       </form>
     </section>
 
+    <section class="card glass-card history-card" id="recent-history">
+      <div class="history-heading">
+        <div>
+          <h2>🗂️ Recent Saved Checks</h2>
+          <p class="history-subtitle">Each successful UV lookup is stored in MongoDB so you can revisit recent locations.</p>
+        </div>
+      </div>
+
+      <% if (recentSearches && recentSearches.length) { %>
+        <div class="history-list">
+          <% recentSearches.forEach(function(search) { %>
+            <article class="history-item">
+              <div>
+                <h3><%= Number(search.lat).toFixed(3) %>°, <%= Number(search.lng).toFixed(3) %>°</h3>
+                <p>
+                  Peak UV <strong><%= Number(search.maxUV).toFixed(1) %></strong>
+                  · Current UV <strong><%= Number(search.currentUV).toFixed(1) %></strong>
+                </p>
+                <span class="history-meta">
+                  Saved <%= new Date(search.createdAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" }) %>
+                </span>
+              </div>
+              <span class="history-badge <%= search.needsSunscreen ? 'history-badge-hot' : 'history-badge-safe' %>">
+                <%= search.verdictLevel %>
+              </span>
+            </article>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <p class="history-empty">No UV history yet. Run your first check to save a record in MongoDB.</p>
+      <% } %>
+    </section>
+
     <!-- Info Cards -->
     <section class="info-grid">
       <div class="card glass-card info-card">

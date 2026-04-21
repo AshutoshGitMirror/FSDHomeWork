@@ -1,9 +1,20 @@
 import "dotenv/config";
 import express from "express";
 import axios from "axios";
+import mongoose from "mongoose";
+import UVCheck from "./models/UVCheck.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/uvscreen";
+
+mongoose
+  .connect(MONGO_URI)
+  .then(() => console.log(`🟢 UVScreen connected to MongoDB: ${MONGO_URI}`))
+  .catch((err) => {
+    console.error("🔴 UVScreen MongoDB connection error:", err.message);
+    process.exit(1);
+  });
 
 // ── Middleware ────────────────────────────────────────────────────────────────
 app.set("view engine", "ejs");
@@ -56,8 +67,19 @@ function formatTime(isoStr) {
 // ── Routes ───────────────────────────────────────────────────────────────────
 
 // Home – landing page with coordinate form
-app.get("/", (_req, res) => {
-  res.render("index");
+app.get("/", async (_req, res) => {
+  let recentSearches = [];
+
+  try {
+    recentSearches = await UVCheck.find()
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .lean();
+  } catch (err) {
+    console.error("Failed to load recent UV searches:", err.message);
+  }
+
+  res.render("index", { recentSearches });
 });
 
 // Check – fetch UV data and render results
@@ -102,6 +124,27 @@ app.post("/check", async (req, res) => {
       to: formatTime(protectionData.result?.to_time),
     };
 
+    let historySaved = false;
+
+    try {
+      await UVCheck.create({
+        lat,
+        lng,
+        currentUV,
+        maxUV,
+        ozone: uvData.result.ozone ?? null,
+        uvTime: uvData.result.uv_time ? new Date(uvData.result.uv_time) : null,
+        maxUVTime: uvData.result.uv_max_time ? new Date(uvData.result.uv_max_time) : null,
+        protectionFrom: protectionData.result?.from_time ? new Date(protectionData.result.from_time) : null,
+        protectionTo: protectionData.result?.to_time ? new Date(protectionData.result.to_time) : null,
+        verdictLevel: verdict.level,
+        needsSunscreen: verdict.needsSunscreen,
+      });
+      historySaved = true;
+    } catch (historyErr) {
+      console.error("Failed to save UV history:", historyErr.message);
+    }
+
     res.render("result", {
       lat,
       lng,
@@ -115,6 +158,7 @@ app.post("/check", async (req, res) => {
       protection,
       forecast,
       uvTime: formatTime(uvData.result.uv_time),
+      historySaved,
     });
   } catch (err) {
     console.error("Route /check error:", err.message);
